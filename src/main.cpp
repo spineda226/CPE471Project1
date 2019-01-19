@@ -131,6 +131,7 @@ int main(int argc, char **argv)
    if(!rc) 
    {
       cerr << errStr << endl;
+      return 0;
    } 
    else 
    {
@@ -161,18 +162,18 @@ int main(int argc, char **argv)
    {
       for (int j = 0; j < 3; ++j) // read three vertices in (with a color for each)
       {
-         index = triBuf[3*i+j];
+         index = triBuf[3*i+j]; // corresponds to 1 point in posBuff
          // convert x and y to pixel coordinates, leave z as depth
          Point p(w2pX(posBuf[3*index], c, d), w2pY(posBuf[3*index+1], e, f), posBuf[3*index+2]);
          if (mode == 1) // color by depth
          {
-            vertices[j] = Vertex(p, Color(0, w2cZ(p.getZ()), 0));
+            vertices[j] = Vertex(p, Color(0, w2cZ(p.getZ()), 0)); // mode 1 is green
          }
          else // color by binned distance
          {
             float curDistance = distance(p.getX(), p.getY(), BINNED_X, BINNED_Y);
-            unsigned char r = distanceToColor(curDistance, maxDistance);
-            vertices[j] = Vertex(p, Color(0, r, 255-r));
+            unsigned char g = distanceToColor(curDistance, maxDistance);
+            vertices[j] = Vertex(p, Color(0, g, 255-g)); // mode 2 is blue for closer and green for farther points
          }
       }
       
@@ -190,7 +191,7 @@ int main(int argc, char **argv)
 	    double alpha = 1 - beta - gamma;
             if (inTriangle(alpha, beta, gamma)) // check if pixel is inside triangle
             {
-               double curZ = getCurZ(alpha, beta, gamma, &t);
+               double curZ = getCurZ(alpha, beta, gamma, &t); // for depth test
                if (((mode == 1) && (zbuff[g_width*y+x] < curZ)) || (mode == 2))
                {
                   image->setPixel(x, y, calculateRed(alpha, beta, gamma, &t),
