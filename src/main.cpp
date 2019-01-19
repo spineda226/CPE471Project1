@@ -105,12 +105,12 @@ int main(int argc, char **argv)
    //set g_width and g_height appropriately!
    g_width = atoi(argv[3]);
    g_height = atoi(argv[4]);
-   const int BINNED_X = 800;//400;//atoi(argv[6]);
-   const int BINNED_Y = 800;//400;//atoi(argv[7]);
 
    // Coloring mode
    int mode = atoi(argv[5]);
-   
+   const int BINNED_X = g_width*0.75;
+   const int BINNED_Y = g_height*0.75;
+
    //create an image
    auto image = make_shared<Image>(g_width, g_height);
    // Create z-buffer
@@ -147,44 +147,40 @@ int main(int argc, char **argv)
    //TODO add code to iterate through each triangle and rasterize it 
    Vertex vertices[3];
    int index;
-   float c, d, e, f;
+   float c, d, e, f, maxDistance;
    c = calculateC(g_width, g_height);
    d = calculateD(g_width, g_height);
    e = calculateE(g_width, g_height);
    f = calculateF(g_width, g_height);
+   maxDistance = getMaxDistance(g_width, g_height, BINNED_X, BINNED_Y); // for mode 2
    // Initialize zbuff to very small number
    for (int x = 0; x < g_width; ++x)
       for (int y = 0; y < g_height; ++y)
          zbuff.push_back(-1.1754E+38F);
-
    for (int i = 0; i < numTriangles; ++i) // for all faces
    {
-      // Create a triangle from the vertices (with a color)
-      for (int j = 0; j < 3; ++j)
+      for (int j = 0; j < 3; ++j) // read three vertices in (with a color for each)
       {
          index = triBuf[3*i+j];
          // convert x and y to pixel coordinates, leave z as depth
          Point p(w2pX(posBuf[3*index], c, d), w2pY(posBuf[3*index+1], e, f), posBuf[3*index+2]);
-         if (mode == 1)
+         if (mode == 1) // color by depth
          {
-            vertices[j] = Vertex(p, Color(w2cZ(p.getZ()), w2cZ(p.getZ()), 0));
+            vertices[j] = Vertex(p, Color(0, w2cZ(p.getZ()), 0));
          }
-         else
+         else // color by binned distance
          {
-            // calcualate max once
-            float maxDistance = getMaxDistance(g_width, g_height, BINNED_X, BINNED_Y);
             float curDistance = distance(p.getX(), p.getY(), BINNED_X, BINNED_Y);
             unsigned char r = distanceToColor(curDistance, maxDistance);
             vertices[j] = Vertex(p, Color(0, r, 255-r));
          }
       }
       
-      // Color the bounding box
-      Triangle t(vertices[0], vertices[1], vertices[2]);
+      Triangle t(vertices[0], vertices[1], vertices[2]); // create triangle and bounding box
       double totalArea = Triangle::getArea(t.getV2().getP(), t.getV3().getP(), t.getV1().getP());
       Point botCorner(t.getBox().getBotLeft());
       Point topCorner(t.getBox().getTopRight());
-      for (int y = botCorner.getY(); y <= topCorner.getY(); ++y)
+      for (int y = botCorner.getY(); y <= topCorner.getY(); ++y) // iterate through bounding box
       {
          for (int x = botCorner.getX(); x <= topCorner.getX(); ++x)
          {
@@ -192,11 +188,9 @@ int main(int argc, char **argv)
             double beta = Triangle::getArea(t.getV1().getP(), temp, t.getV3().getP())/totalArea;
             double gamma = Triangle::getArea(t.getV2().getP(), temp, t.getV1().getP())/totalArea;
 	    double alpha = 1 - beta - gamma;
-            if (inTriangle(alpha, beta, gamma))
+            if (inTriangle(alpha, beta, gamma)) // check if pixel is inside triangle
             {
-               double curZ = alpha*t.getV1().getP().getZ() +
-                             beta*t.getV2().getP().getZ() +
-                             gamma*t.getV3().getP().getZ();
+               double curZ = getCurZ(alpha, beta, gamma, &t);
                if (((mode == 1) && (zbuff[g_width*y+x] < curZ)) || (mode == 2))
                {
                   image->setPixel(x, y, calculateRed(alpha, beta, gamma, &t),

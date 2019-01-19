@@ -8,7 +8,7 @@ float calculateC(int width, int height)
    float left, right;
    if (width > height)
    {
-      left = -width/(float)height;
+      left = -1.0*width/(float)height;
       right = width/(float)height;
    }
    else
@@ -16,7 +16,6 @@ float calculateC(int width, int height)
       left = -1.0;
       right = 1.0;
    }
-   std::cout << "width: " << width << " " << right << " " << left << " C: " << (width-1)/(right-left) << std::endl;
    return (width-1.0)/(right-left);
 }
 
@@ -34,7 +33,6 @@ float calculateD(int width, int height)
       left = -1.0;
       right = 1.0;
    }
-   std::cout << "width: " << width << " " << right << " " << left << " D: " << (1-width)*left/(right-left) << std::endl;
    return (1.0-width)*left/(right-left);
 }
 
@@ -52,7 +50,6 @@ float calculateE(int width, int height)
       bottom = -1.0*height/(float)width;
       top = height/(float)width;
    }
-   std::cout << "height: " << height << " " << bottom << " " << top << " E: " << (height-1)/(top-bottom) << std::endl;
    return (height-1.0)/(top-bottom);
 }
 
@@ -115,6 +112,14 @@ int w2cZ(float zw)
    return (zw+1.0)*127.5;
 }
 
+// get current z using barycentric coordinates
+double getCurZ(double alpha, double beta, double gamma, Triangle *t)
+{
+   return alpha*t->getV1().getP().getZ() +
+          beta*t->getV2().getP().getZ() +
+          gamma*t->getV3().getP().getZ();
+}
+
 // calculate max distance from binned_x and binned_y
 float getMaxDistance(int width, int height, int binnedX, int binnedY)
 {
@@ -127,7 +132,6 @@ float getMaxDistance(int width, int height, int binnedX, int binnedY)
       maxDistanceY = binnedY;
    else
       maxDistanceY = (height-binnedY);
-   //std::cout << "Max X: " << maxDistanceX << " " << maxDistanceY << std::endl;
    return distance(0, 0, maxDistanceX, maxDistanceY);
 }
 
