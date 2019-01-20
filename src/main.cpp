@@ -153,6 +153,8 @@ int main(int argc, char **argv)
    d = calculateD(g_width, g_height);
    e = calculateE(g_width, g_height);
    f = calculateF(g_width, g_height);
+   Color c1(0, 255, 0); // mode 2 is blue for closer and green for farther points
+   Color c2(0, 0, 255); 
    maxDistance = getMaxDistance(g_width, g_height, BINNED_X, BINNED_Y); // for mode 2
    // Initialize zbuff to very small number
    for (int x = 0; x < g_width; ++x)
@@ -166,14 +168,14 @@ int main(int argc, char **argv)
          // convert x and y to pixel coordinates, leave z as depth
          Point p(w2pX(posBuf[3*index], c, d), w2pY(posBuf[3*index+1], e, f), posBuf[3*index+2]);
          if (mode == 1) // color by depth
-         {
             vertices[j] = Vertex(p, Color(0, w2cZ(p.getZ()), 0)); // mode 1 is green
-         }
          else // color by binned distance
          {
             float curDistance = distance(p.getX(), p.getY(), BINNED_X, BINNED_Y);
-            unsigned char g = distanceToColor(curDistance, maxDistance);
-            vertices[j] = Vertex(p, Color(0, g, 255-g)); // mode 2 is blue for closer and green for farther points
+            float ratio = binnedRatio(curDistance, maxDistance);
+            vertices[j] = Vertex(p, Color(c1.getR()*ratio + c2.getR()*(1-ratio),
+                                          c1.getG()*ratio + c2.getG()*(1-ratio),
+                                          c1.getB()*ratio + c2.getB()*(1-ratio)));
          }
       }
       
@@ -191,14 +193,22 @@ int main(int argc, char **argv)
 	    double alpha = 1 - beta - gamma;
             if (inTriangle(alpha, beta, gamma)) // check if pixel is inside triangle
             {
-               double curZ = getCurZ(alpha, beta, gamma, &t); // for depth test
-               if (((mode == 1) && (zbuff[g_width*y+x] < curZ)) || (mode == 2))
+               if (mode == 1) // depth test
+               {
+                  double curZ = getCurZ(alpha, beta, gamma, &t);
+                  if (zbuff[g_width*y+x] < curZ)
+                  {
+                     image->setPixel(x, y, calculateRed(alpha, beta, gamma, &t),
+                                           calculateGreen(alpha, beta, gamma, &t),
+                                           calculateBlue(alpha, beta, gamma, &t));
+                     zbuff[g_width*y+x] = curZ;
+                  }
+               }
+               else if (mode == 2) // binned distance
                {
                   image->setPixel(x, y, calculateRed(alpha, beta, gamma, &t),
                                         calculateGreen(alpha, beta, gamma, &t),
                                         calculateBlue(alpha, beta, gamma, &t));
-                  if (mode == 1)
-                     zbuff[g_width*y+x] = curZ;
                }
             }
          }

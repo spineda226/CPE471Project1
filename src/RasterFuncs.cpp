@@ -141,11 +141,30 @@ float distance(int x1, int y1, int x2, int y2)
    return sqrt((x2-x1)*(x2-x1) + (float)(y2-y1)*(y2-y1));
 }
 
-// convert distance (0-maxDistance) to color (0-255)
-int distanceToColor(float curDistance, float maxDistance)
+// return ratio of current distance to max distance
+float binnedRatio(float curDistance, float maxDistance)
 {
-   float colorVal = (curDistance/maxDistance)*255;
-   if (colorVal > 255) // check for floating error
-      colorVal = 255;
-   return colorVal;
+   float ratio = (curDistance/maxDistance);
+   float bin = 0;
+   if ((ratio >= 0) && (ratio <= 0.1))
+      bin = 0.1;
+   else if (ratio <= 0.2)
+      bin = 0.2;
+   else if (ratio <= 0.3)
+      bin = 0.3;
+   else if (ratio <= 0.4)
+      bin = 0.4;
+   else if (ratio <= 0.5)
+      bin = 0.5;
+   else if (ratio <= 0.6)
+      bin = 0.6;
+   else if (ratio <= 0.7)
+      bin = 0.7;
+   else if (ratio <= 0.8)
+      bin = 0.8;
+   else if (ratio <= 0.9)
+      bin = 0.9;
+   else
+      bin = 1;
+   return bin;
 }

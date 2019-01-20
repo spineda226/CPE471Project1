@@ -6,29 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/Users/spineda226/Classwork/cpe471/Project1/src/Box.cpp
-Box.h
-/Users/spineda226/Classwork/cpe471/Project1/src/Box.h
-
 /Users/spineda226/Classwork/cpe471/Project1/src/Box.h
 Point.h
 /Users/spineda226/Classwork/cpe471/Project1/src/Point.h
 
-/Users/spineda226/Classwork/cpe471/Project1/src/Color.cpp
-Color.h
 /Users/spineda226/Classwork/cpe471/Project1/src/Color.h
-
-/Users/spineda226/Classwork/cpe471/Project1/src/Color.h
-
-/Users/spineda226/Classwork/cpe471/Project1/src/Image.cpp
-iostream
--
-cassert
--
-Image.h
-/Users/spineda226/Classwork/cpe471/Project1/src/Image.h
-stb_image_write.h
-/Users/spineda226/Classwork/cpe471/Project1/src/stb_image_write.h
 
 /Users/spineda226/Classwork/cpe471/Project1/src/Image.h
 string
@@ -36,39 +18,17 @@ string
 vector
 -
 
-/Users/spineda226/Classwork/cpe471/Project1/src/Point.cpp
-Point.h
 /Users/spineda226/Classwork/cpe471/Project1/src/Point.h
-
-/Users/spineda226/Classwork/cpe471/Project1/src/Point.h
-
-/Users/spineda226/Classwork/cpe471/Project1/src/RasterFuncs.cpp
-RasterFuncs.h
-/Users/spineda226/Classwork/cpe471/Project1/src/RasterFuncs.h
-iostream
--
-math.h
--
 
 /Users/spineda226/Classwork/cpe471/Project1/src/RasterFuncs.h
 Triangle.h
 /Users/spineda226/Classwork/cpe471/Project1/src/Triangle.h
-
-/Users/spineda226/Classwork/cpe471/Project1/src/Triangle.cpp
-Triangle.h
-/Users/spineda226/Classwork/cpe471/Project1/src/Triangle.h
-algorithm
--
 
 /Users/spineda226/Classwork/cpe471/Project1/src/Triangle.h
 Vertex.h
 /Users/spineda226/Classwork/cpe471/Project1/src/Vertex.h
 Box.h
 /Users/spineda226/Classwork/cpe471/Project1/src/Box.h
-
-/Users/spineda226/Classwork/cpe471/Project1/src/Vertex.cpp
-Vertex.h
-/Users/spineda226/Classwork/cpe471/Project1/src/Vertex.h
 
 /Users/spineda226/Classwork/cpe471/Project1/src/Vertex.h
 Point.h
@@ -101,20 +61,6 @@ Triangle.h
 /Users/spineda226/Classwork/cpe471/Project1/src/Triangle.h
 RasterFuncs.h
 /Users/spineda226/Classwork/cpe471/Project1/src/RasterFuncs.h
-
-/Users/spineda226/Classwork/cpe471/Project1/src/stb_image_write.h
-stdio.h
--
-stdarg.h
--
-stdlib.h
--
-string.h
--
-math.h
--
-assert.h
--
 
 /Users/spineda226/Classwork/cpe471/Project1/src/tiny_obj_loader.h
 string

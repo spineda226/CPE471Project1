@@ -16,6 +16,6 @@ int w2cZ(float zw);
 float distance(int x1, int y1, int x2, int y2);
 double getCurZ(double alpha, double beta, double gamma, Triangle *t);
 float getMaxDistance(int width, int height, int binnedX, int binnedY);
-int distanceToColor(float curDistance, float maxDistance);
+float binnedRatio(float curDistance, float maxDistance);
 
 #endif
